@@ -1,0 +1,8 @@
+---
+applications:
+- name: jifwtfservice
+  memory: 32M
+  instances: 2
+  domain: cfapps.io
+  host: jifwtfservice
+  command: jifwtfservice

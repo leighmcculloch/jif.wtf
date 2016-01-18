@@ -1,0 +1,37 @@
+@charset "utf-8";
+@import "normalize";
+
+body {
+  text-align: center;
+  font-size: 1em;
+  font-family: monospace;
+}
+
+#search-form {
+  margin: 1em;
+}
+
+#search-field {
+  padding: 5px;
+  text-align: center;
+  outline: none;
+  width: 100%;
+  max-width: 400px;
+  border: none;
+  appearance: none;
+  background-color: #eee;
+}
+
+#result-container {
+  margin: 1em 0;
+  text-align: center;
+  video {
+    border: none;
+    overflow: hidden;
+    max-width: 100%;
+  }
+}
+
+#cache-results-container {
+  display: none;
+}

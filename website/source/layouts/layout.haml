@@ -1,0 +1,14 @@
+%html
+  %head
+    %meta{ :content => "IE=edge", :"http-equiv" => "X-UA-Compatible" }
+    %meta{ :charset => "utf-8" }
+    %meta{ :content => "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no", :name => "viewport" }
+
+    %title jif.wtf
+
+    = stylesheet_link_tag("site")
+    = javascript_include_tag("socket.io-1.4.3")
+    = javascript_include_tag("index")
+
+  %body{ :class => page_classes }
+    = yield
