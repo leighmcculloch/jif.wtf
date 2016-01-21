@@ -44,24 +44,39 @@
 
   function searchKeyDown(e) {
     var TAB_KEY = 9;
+    var ARROW_LEFT_KEY = 37;
+    var ARROW_RIGHT_KEY = 39;
 
-    if (e.keyCode == TAB_KEY) {
-      if (e.shiftKey) {
-        resultIndex--;
-      } else {
-        resultIndex++;
-      }
-      if (typeof results !== 'undefined') {
-        if (resultIndex < 0) {
-          resultIndex = results.length - 1;
-        } else if (resultIndex >= results.length) {
-          resultIndex = 0;
-        }
-      }
-      displayResult(resultIndex);
-      e.preventDefault();
-      return false;
+    switch (e.keyCode) {
+      case TAB_KEY:
+        navigate(e.shiftKey ? -1 : 1);
+        e.preventDefault();
+        return false;
+      case ARROW_LEFT_KEY:
+        navigate(-1);
+        e.preventDefault();
+        return false;
+      case ARROW_RIGHT_KEY:
+        navigate(1);
+        e.preventDefault();
+        return false;
     }
+  }
+
+  function navigate(vector) {
+    if (vector > 0) {
+      resultIndex++;
+    } else {
+      resultIndex--;
+    }
+    if (typeof results !== 'undefined') {
+      if (resultIndex < 0) {
+        resultIndex = results.length - 1;
+      } else if (resultIndex >= results.length) {
+        resultIndex = 0;
+      }
+    }
+    displayResult(resultIndex);
   }
 
   function searchWithDelay() {
