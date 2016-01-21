@@ -1,5 +1,6 @@
 (function () {
   var SERVICE_ADDRESS = 'wss://jifwtfservice.cfapps.io:4443';
+  var ENGINE = 'giphy';
 
   var searchForm;
   var searchField;
@@ -74,7 +75,7 @@
       return;
     }
     lastSearchQuery = searchField.value;
-    socket.emit('search', 'giphy', lastSearchQuery);
+    socket.emit('search', ENGINE, lastSearchQuery);
   }
 
   function onResults(query, newResults) {
