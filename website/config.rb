@@ -1,4 +1,5 @@
 configure :build do
+  activate :asset_hash
 end
 
 activate :s3_sync do |s3_sync|
