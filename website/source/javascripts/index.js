@@ -26,21 +26,23 @@
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
 
-    navigationLeft.addEventListener('click', function() { navigate(-1); });
-    navigationRight.addEventListener('click', function() { navigate(1); });
-
-    searchForm.addEventListener('submit', formSubmit);
-    searchField.addEventListener('keyup', searchWithDelay);
-    searchField.addEventListener('change', search);
-
-    document.addEventListener('keydown', searchKeyDown);
-
-    resultUrl.addEventListener('click', resultUrlSelect);
-
     socket = io(SERVICE_ADDRESS);
     socket.on('results', onResults);
+    socket.on('connect', function() {
+      navigationLeft.addEventListener('click', function() { navigate(-1); });
+      navigationRight.addEventListener('click', function() { navigate(1); });
 
-    searchField.focus();
+      searchForm.addEventListener('submit', formSubmit);
+      searchField.addEventListener('keyup', searchWithDelay);
+      searchField.addEventListener('change', search);
+
+      document.addEventListener('keydown', searchKeyDown);
+
+      resultUrl.addEventListener('click', resultUrlSelect);
+
+      searchField.focus();
+
+    });
   }
 
   function formSubmit(e) {
