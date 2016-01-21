@@ -1,5 +1,5 @@
 (function () {
-  var SERVICE_ADDRESS = 'ws://jifwtfservice.cfapps.io';
+  var SERVICE_ADDRESS = 'wss://jifwtfservice.cfapps.io:4443';
 
   var searchForm;
   var searchField;
