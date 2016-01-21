@@ -9,7 +9,7 @@ import (
 )
 
 func GetImgurResults(search string) []SearchResult {
-	searchResponse := getSearchResponse(search)
+	searchResponse := performImgurSearch(search)
 	return convertImgurSearchResultsToSearchResults(searchResponse.Results)
 }
 
@@ -28,7 +28,7 @@ type imgurSearchResult struct {
 	Points    int    `json:"points"`
 }
 
-func getSearchResponse(search string) imgurSearchResponse {
+func performImgurSearch(search string) imgurSearchResponse {
 	params := url.Values{}
 	params.Add("q_type", "anigif")
 	params.Add("q_all", search)
