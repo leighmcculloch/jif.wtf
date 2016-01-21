@@ -42,6 +42,10 @@
 
       searchField.focus();
 
+      searchField.value = window.location.hash.replace(/^#/, '');
+      if (searchField.value.length > 0) {
+        searchWithDelay();
+      }
     });
   }
 
@@ -95,6 +99,7 @@
       return;
     }
     lastSearchQuery = searchField.value;
+    window.history.pushState(null, null, '#' + lastSearchQuery);
     socket.emit('search', ENGINE, lastSearchQuery);
   }
 
