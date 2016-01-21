@@ -23,11 +23,10 @@ func main() {
 
 	server.On("connection", func(so socketio.Socket) {
 		so.On("search", func(query string) {
-			log.Println("search:", query)
+			results := getImgurResults(query)
+			sort.Sort(ByRating(results))
 
-			body := getResults(query)
-
-			so.Emit("results", query, body)
+			so.Emit("results", query, results)
 		})
 	})
 
@@ -50,21 +49,26 @@ func main() {
 }
 
 type SearchResult struct {
-	Width     int    `json:"width"`
-	Height    int    `json:"height"`
-	Mp4       string `json:"mp4"`
-	Gifv      string `json:"gifv"`
-	Gif       string `json:"link"`
-	IsLooping bool   `json:"looping"`
-	Points    int    `json:"points"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+	Mp4    string `json:"mp4"`
+	Gif    string `json:"gif"`
+	Rating int    `json:"rating"`
 }
 
-type SearchResponse struct {
-	Success bool           `json:"success"`
-	Results []SearchResult `json:"data"`
+type ByRating []SearchResult
+
+func (s ByRating) Len() int {
+	return len(s)
+}
+func (s ByRating) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s ByRating) Less(i, j int) bool {
+	return s[i].Rating < s[j].Rating
 }
 
-func getResults(search string) []SearchResult {
+func getImgurResults(search string) []SearchResult {
 	params := url.Values{}
 	params.Add("q_type", "anigif")
 	params.Add("q_all", search)
@@ -75,34 +79,45 @@ func getResults(search string) []SearchResult {
 		Path:     "/3/gallery/search",
 		RawQuery: params.Encode(),
 	}
-	log.Println("url:", url.String())
 
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url.String(), nil)
 	req.Header.Set("Authorization", "Client-ID a27edb3db737edf")
 	res, err := client.Do(req)
 	if err != nil {
-		log.Println("imgur api error:", err)
+		log.Fatal("Imgur API Error:", err)
 	}
 
 	body, _ := ioutil.ReadAll(res.Body)
 
-	var searchResponse SearchResponse
+	type ImgurSearchResult struct {
+		Width     int    `json:"width"`
+		Height    int    `json:"height"`
+		Mp4       string `json:"mp4"`
+		Gifv      string `json:"gifv"`
+		Gif       string `json:"link"`
+		IsLooping bool   `json:"looping"`
+		Points    int    `json:"points"`
+	}
+
+	type ImgurSearchResponse struct {
+		Success bool                `json:"success"`
+		Results []ImgurSearchResult `json:"data"`
+	}
+
+	var searchResponse ImgurSearchResponse
 	json.Unmarshal(body, &searchResponse)
 
-	results := searchResponse.Results
-	sort.Sort(ByPoints(results))
+	results := make([]SearchResult, len(searchResponse.Results))
+	for i := 0; i < len(searchResponse.Results); i++ {
+		results[i] = SearchResult{
+			Width:  searchResponse.Results[i].Width,
+			Height: searchResponse.Results[i].Height,
+			Mp4:    searchResponse.Results[i].Mp4,
+			Gif:    searchResponse.Results[i].Gif,
+			Rating: searchResponse.Results[i].Points,
+		}
+	}
+
 	return results
-}
-
-type ByPoints []SearchResult
-
-func (s ByPoints) Len() int {
-	return len(s)
-}
-func (s ByPoints) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-func (s ByPoints) Less(i, j int) bool {
-	return s[i].Points < s[j].Points
 }

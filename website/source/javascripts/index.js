@@ -98,7 +98,7 @@
       resultUrl.innerText = '';
       return;
     }
-    var url = results[index].link;
+    var url = results[index].gif;
 
     resultDisplay.type = 'video/mp4';
     resultDisplay.src = results[index].mp4;
