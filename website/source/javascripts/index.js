@@ -74,7 +74,7 @@
       return;
     }
     lastSearchQuery = searchField.value;
-    socket.emit('search', lastSearchQuery);
+    socket.emit('search', 'giphy', lastSearchQuery);
   }
 
   function onResults(query, newResults) {

@@ -11,8 +11,14 @@ import (
 )
 
 func onConnection(so socketio.Socket) {
-	so.On("search", func(query string) {
-		results := GetImgurResults(query)
+	so.On("search", func(engine, query string) {
+		var results []SearchResult
+		switch engine {
+		case "imgur":
+			results = GetImgurResults(query)
+		case "giphy":
+			results = GetGiphyResults(query)
+		}
 		sort.Sort(SearchResultsByRating(results))
 
 		so.Emit("results", query, results)
