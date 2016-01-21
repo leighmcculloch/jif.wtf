@@ -26,7 +26,8 @@
     searchForm.addEventListener('submit', formSubmit);
     searchField.addEventListener('keyup', searchWithDelay);
     searchField.addEventListener('change', search);
-    searchField.addEventListener('keydown', searchKeyDown);
+
+    document.addEventListener('keydown', searchKeyDown);
 
     resultUrl.addEventListener('click', resultUrlSelect);
 
