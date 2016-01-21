@@ -22,6 +22,16 @@ body {
   background-color: #eee;
 }
 
+#navigation-arrows {
+  display: none;
+  font-size: 1.5em;
+  #navigation-arrow-left, #navigation-arrow-right {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 #result-container {
   margin: 1em 0;
   text-align: center;

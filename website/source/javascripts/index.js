@@ -22,6 +22,12 @@
     resultDisplay = document.getElementById('result-display');
     resultMessage = document.getElementById('result-message');
     resultUrl = document.getElementById('result-url');
+    navigation = document.getElementById('navigation-arrows');
+    navigationLeft = document.getElementById('navigation-arrow-left');
+    navigationRight = document.getElementById('navigation-arrow-right');
+
+    navigationLeft.addEventListener('click', function() { navigate(-1); });
+    navigationRight.addEventListener('click', function() { navigate(1); });
 
     searchForm.addEventListener('submit', formSubmit);
     searchField.addEventListener('keyup', searchWithDelay);
@@ -65,11 +71,7 @@
   }
 
   function navigate(vector) {
-    if (vector > 0) {
-      resultIndex++;
-    } else {
-      resultIndex--;
-    }
+    resultIndex += vector;
     if (typeof results !== 'undefined') {
       if (resultIndex < 0) {
         resultIndex = results.length - 1;
@@ -113,8 +115,12 @@
         resultMessage.innerText = '';
       }
       resultUrl.innerText = '';
+      navigation.style.display = 'none';
       return;
     }
+
+    navigation.style.display = 'block';
+
     var url = results[index].gif;
 
     resultDisplay.type = 'video/mp4';
