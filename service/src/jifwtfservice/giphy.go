@@ -35,7 +35,7 @@ type giphySearchResultImageOriginal struct {
 
 func performGiphySearch(search string) giphySearchResponse {
 	params := url.Values{}
-	params.Add("api_key", "dc6zaTOxFJmzC")
+	params.Add("api_key", "dc6zaTOxFJmzC") // public beta key from https://github.com/giphy/GiphyAPI
 	params.Add("q", search)
 
 	url := url.URL{

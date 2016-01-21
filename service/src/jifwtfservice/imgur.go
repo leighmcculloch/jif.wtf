@@ -40,9 +40,11 @@ func performImgurSearch(search string) imgurSearchResponse {
 		RawQuery: params.Encode(),
 	}
 
+	var clientId string = os.Getenv("IMGUR_CLIENT_ID")
+
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url.String(), nil)
-	req.Header.Set("Authorization", "Client-ID a27edb3db737edf")
+	req.Header.Set("Authorization", fmt.Sprintf("Client-ID %s", clientId))
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal("Imgur API Error:", err)
