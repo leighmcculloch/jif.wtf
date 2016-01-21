@@ -106,6 +106,8 @@
     resultDisplay.autoplay = true;
     resultDisplay.muted = 'muted';
     resultDisplay.loop = 'loop';
+    resultDisplay.width = results[index].width;
+    resultDisplay.height = results[index].height;
 
     resultMessage.innerText = "Result " + (index + 1) + " of " + results.length;
     resultUrl.innerText = url;
