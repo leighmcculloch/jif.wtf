@@ -26,8 +26,6 @@ func onConnection(so socketio.Socket) {
 	so.On("search", func(engine, query string) {
 		var results []SearchResult
 		switch engine {
-		case "imgur":
-			results = GetImgurResults(query)
 		case "giphy":
 			results = GetGiphyResults(query)
 		}
