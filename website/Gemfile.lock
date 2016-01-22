@@ -52,6 +52,7 @@ GEM
     hamster (2.0.0)
       concurrent-ruby (~> 0.8)
     hashie (3.4.3)
+    htmlcompressor (0.2.0)
     i18n (0.7.0)
     ipaddress (0.8.0)
     json (1.8.3)
@@ -89,6 +90,9 @@ GEM
       sass (>= 3.4)
       tilt (~> 1.4.1)
       uglifier (~> 2.6)
+    middleman-minify-html (3.4.1)
+      htmlcompressor (~> 0.2.0)
+      middleman-core (>= 3.2)
     middleman-s3_sync (4.0.0)
       ansi (~> 1.5.0)
       fog-aws (>= 0.1.1)
@@ -139,6 +143,7 @@ PLATFORMS
 
 DEPENDENCIES
   middleman (>= 4.0.0)
+  middleman-minify-html (>= 3.4.1)
   middleman-s3_sync (>= 4.0)
   mime-types
 
