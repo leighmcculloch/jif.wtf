@@ -5,10 +5,22 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"sort"
 
 	"github.com/googollee/go-socket.io"
 )
+
+func transposeGiphyUrl(giphyUrl string) string {
+	re := regexp.MustCompile(`http://media(\d+).giphy.com/media/([0-9a-zA-Z]+)/giphy.gif`)
+	matches := re.FindStringSubmatch(giphyUrl)
+	if len(matches) != 3 {
+		return giphyUrl
+	}
+	mediaId := matches[1]
+	imageId := matches[2]
+	return fmt.Sprintf("http://jif.wtf/0%s.%s.gif", mediaId, imageId)
+}
 
 func onConnection(so socketio.Socket) {
 	so.On("search", func(engine, query string) {
@@ -20,6 +32,10 @@ func onConnection(so socketio.Socket) {
 			results = GetGiphyResults(query)
 		}
 		sort.Sort(SearchResultsByRating(results))
+
+		for i := 0; i < len(results); i++ {
+			results[i].Gif = transposeGiphyUrl(results[i].Gif)
+		}
 
 		so.Emit("results", query, results)
 	})
