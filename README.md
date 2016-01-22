@@ -7,7 +7,7 @@
 * Barebones interface.
 * Quick click & copy paste of direct gif URL.
 
-![](README-screenshot.png)
+![](README-screenshot.gif)
 
 # Why
 
