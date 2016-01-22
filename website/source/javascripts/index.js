@@ -132,10 +132,6 @@
 
     resultDisplay.type = 'video/mp4';
     resultDisplay.src = results[index].mp4;
-    resultDisplay.preload = 'auto';
-    resultDisplay.autoplay = true;
-    resultDisplay.muted = 'muted';
-    resultDisplay.loop = 'loop';
     resultDisplay.width = results[index].width;
     resultDisplay.height = results[index].height;
 
