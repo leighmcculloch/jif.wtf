@@ -50,10 +50,16 @@ func main() {
 	server.On("connection", onConnection)
 
 	http.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://jif.wtf")
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-type")
-		server.ServeHTTP(w, r)
+		origin := r.Header["Origin"][0]
+		switch origin {
+		case "http://jif.wtf", "https://jif.wtf":
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-type")
+			server.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
 	})
 
 	var host string
