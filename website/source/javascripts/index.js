@@ -1,6 +1,5 @@
 (function () {
-  var SERVICE_ADDRESS = 'wss://jifwtfservice.cfapps.io:4443';
-  var ENGINE = 'giphy';
+  var SERVICE_ADDRESS = 'https://jifwtfservice.cfapps.io';
 
   var searchForm;
   var searchField;
@@ -10,7 +9,6 @@
   var resultUrl;
   var lastSearchQuery;
   var lastSearchTimeoutId;
-  var socket;
 
   var results;
   var resultIndex;
@@ -26,27 +24,23 @@
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
 
-    socket = io(SERVICE_ADDRESS);
-    socket.on('results', onResults);
-    socket.on('connect', function() {
-      navigationLeft.addEventListener('click', function() { navigate(-1); });
-      navigationRight.addEventListener('click', function() { navigate(1); });
+    navigationLeft.addEventListener('click', function() { navigate(-1); });
+    navigationRight.addEventListener('click', function() { navigate(1); });
 
-      searchForm.addEventListener('submit', formSubmit);
-      searchField.addEventListener('keyup', searchWithDelay);
-      searchField.addEventListener('change', search);
+    searchForm.addEventListener('submit', formSubmit);
+    searchField.addEventListener('keyup', searchWithDelay);
+    searchField.addEventListener('change', search);
 
-      document.addEventListener('keydown', searchKeyDown);
+    document.addEventListener('keydown', searchKeyDown);
 
-      resultUrl.addEventListener('click', resultUrlSelect);
+    resultUrl.addEventListener('click', resultUrlSelect);
 
-      searchField.focus();
+    searchField.focus();
 
-      searchField.value = window.location.hash.replace(/^#/, '');
-      if (searchField.value.length > 0) {
-        searchWithDelay();
-      }
-    });
+    searchField.value = window.location.hash.replace(/^#/, '');
+    if (searchField.value.length > 0) {
+      searchWithDelay();
+    }
   }
 
   function formSubmit(e) {
@@ -100,7 +94,12 @@
     }
     lastSearchQuery = searchField.value;
     window.history.pushState(null, null, '#' + lastSearchQuery);
-    socket.emit('search', ENGINE, lastSearchQuery);
+    makeCORSRequest(
+      SERVICE_ADDRESS + '/search?query=' + encodeURIComponent(lastSearchQuery),
+      function(response) {
+        onResults(response.query, response.search_results);
+      }
+    );
   }
 
   function onResults(query, newResults) {
@@ -153,6 +152,32 @@
       range.selectNode(element);
       window.getSelection().addRange(range);
     }
+  }
+
+  function makeCORSRequest(url, complete) {
+    var method = 'GET';
+
+    var xhr = new XMLHttpRequest();
+    if ('withCredentials' in xhr) {
+      xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != 'undefined') {
+      xhr = new XDomainRequest();
+      xhr.open(method, url);
+    } else {
+      console.log('CORS is not supported.');
+      return;
+    }
+
+    xhr.onload = function() {
+      complete(JSON.parse(xhr.responseText));
+    }
+    xhr.onerror = function() {
+      console.log('An XHR error occurred.');
+    };
+
+    xhr.send();
+
+    return xhr;
   }
 
   window.addEventListener("load", init);
