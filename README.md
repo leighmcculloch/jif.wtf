@@ -26,7 +26,7 @@ cd website/
 ./deploy
 ```
 
-## Websocket Service
+## HTTP/Websocket Service
 
 Built in `go` and deploys to [Pivotal Website Services](https://run.pivotal.io).
 
