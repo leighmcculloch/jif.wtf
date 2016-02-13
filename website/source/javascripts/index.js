@@ -116,11 +116,11 @@
     if (typeof results === 'undefined' || results == null || results.length == 0) {
       resultDisplay.src = '';
       if (searchField.value.length > 0) {
-        resultMessage.innerText = 'No results. Search for something else.';
+        resultMessage.innerHTML = 'No results. Search for something else.';
       } else {
-        resultMessage.innerText = '';
+        resultMessage.innerHTML = '';
       }
-      resultUrl.innerText = '';
+      resultUrl.innerHTML = '';
       navigation.style.display = 'none';
       return;
     }
@@ -134,8 +134,8 @@
     resultDisplay.width = results[index].width;
     resultDisplay.height = results[index].height;
 
-    resultMessage.innerText = "Result " + (index + 1) + " of " + results.length;
-    resultUrl.innerText = url;
+    resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
+    resultUrl.innerHTML = url;
   }
 
   function resultUrlSelect(e) {
