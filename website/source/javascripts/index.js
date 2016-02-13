@@ -127,15 +127,13 @@
 
     navigation.style.display = 'block';
 
-    var url = results[index].gif;
-
     resultDisplay.type = 'video/mp4';
     resultDisplay.src = results[index].mp4;
     resultDisplay.width = results[index].width;
     resultDisplay.height = results[index].height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
-    resultUrl.innerHTML = url;
+    resultUrl.innerHTML = results[index].gif;
   }
 
   function resultUrlSelect(e) {
