@@ -31,6 +31,7 @@ type giphySearchResultImageOriginal struct {
 	Height string `json:"height"`
 	Mp4    string `json:"mp4"`
 	Gif    string `json:"url"`
+	Webp   string `json:"webp"`
 }
 
 func performGiphySearch(search string) giphySearchResponse {
@@ -70,6 +71,7 @@ func convertGiphySearchResultsToSearchResults(results []giphySearchResult) []Sea
 			Height: height,
 			Mp4:    results[i].Images.Original.Mp4,
 			Gif:    results[i].Images.Original.Gif,
+			Webp:   results[i].Images.Original.Webp,
 		}
 	}
 	return converted
