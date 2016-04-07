@@ -96,12 +96,12 @@ func getSearchResults(engine, query string) *SearchResults {
 }
 
 func transposeGiphyUrl(giphyUrl string) string {
-	re := regexp.MustCompile(`http://media(\d+).giphy.com/media/([0-9a-zA-Z]+)/giphy.gif`)
+	re := regexp.MustCompile(`http(s?)://media(\d+).giphy.com/media/([0-9a-zA-Z]+)/giphy.gif`)
 	matches := re.FindStringSubmatch(giphyUrl)
-	if len(matches) != 3 {
+	if len(matches) != 4 {
 		return giphyUrl
 	}
-	mediaId := matches[1]
-	imageId := matches[2]
+	mediaId := matches[2]
+	imageId := matches[3]
 	return fmt.Sprintf("http://jif.wtf/0%s.%s.gif", mediaId, imageId)
 }
