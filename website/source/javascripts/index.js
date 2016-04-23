@@ -1,6 +1,4 @@
 (function () {
-  var SERVICE_ADDRESS = 'https://jifwtfservice.cfapps.io';
-
   var searchForm;
   var searchField;
   var resultContainer;
@@ -94,10 +92,11 @@
     }
     lastSearchQuery = searchField.value;
     window.history.pushState(null, null, '#' + lastSearchQuery);
+
     makeCORSRequest(
-      SERVICE_ADDRESS + '/search?query=' + encodeURIComponent(lastSearchQuery),
+      'http://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(lastSearchQuery),
       function(response) {
-        onResults(response.query, response.search_results);
+        onResults(lastSearchQuery, response.data);
       }
     );
   }
@@ -127,13 +126,26 @@
 
     navigation.style.display = 'block';
 
+    result = results[index].images.original;
+
     resultDisplay.type = 'video/mp4';
-    resultDisplay.src = results[index].mp4;
-    resultDisplay.width = results[index].width;
-    resultDisplay.height = results[index].height;
+    resultDisplay.src = result.mp4;
+    resultDisplay.width = result.width;
+    resultDisplay.height = result.height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
-    resultUrl.innerHTML = results[index].gif;
+    resultUrl.innerHTML = transposeGiphyUrl(result.url);
+  }
+
+  function transposeGiphyUrl(giphyUrl) {
+    var re = /http(s?):\/\/media(\d+).giphy.com\/media\/([0-9a-zA-Z]+)\/giphy.gif/g;
+    var matches = re.exec(giphyUrl);
+    if (matches.length != 4) {
+      return giphyUrl;
+    }
+    var mediaId = matches[2]
+    var imageId = matches[3]
+    return "http://jif.wtf/0" + mediaId + "." + imageId + ".gif";
   }
 
   function resultUrlSelect(e) {

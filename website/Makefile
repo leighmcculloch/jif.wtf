@@ -5,6 +5,9 @@ deploy: clean build push cdn
 clean:
 	rm -fR build
 
+run:
+	bundle exec middleman server
+
 build:
 	bundle exec middleman build
 

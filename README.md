@@ -23,17 +23,7 @@ Built using `middleman` and deploys to AWS S3.
 
 ```bash
 cd website/
-./deploy
-```
-
-## HTTP/Websocket Service
-
-Built in `go` and deploys to [Pivotal Website Services](https://run.pivotal.io).
-
-```bash
-cd service/
-cf login
-cf push
+make deploy
 ```
 
 # Inspiration
