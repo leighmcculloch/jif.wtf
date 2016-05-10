@@ -12,7 +12,16 @@ build:
 	bundle exec middleman build
 
 push:
-	bundle exec middleman s3_sync --force
+	git branch -D gh-pages 2>/dev/null | true
+	git branch -D gh-pages-draft 2>/dev/null | true
+	cd .. && \
+		git checkout -b gh-pages-draft && \
+		git add -f website/build && \
+		git commit -m "Deploy to gh-pages" && \
+		git subtree split --prefix website/build -b gh-pages && \
+		git push --force origin gh-pages:gh-pages && \
+		git checkout - && \
+		cd -
 
 cdn:
 	curl -X DELETE "https://api.cloudflare.com/client/v4/zones/$(CLOUDFLARE_ZONE)/purge_cache" \
