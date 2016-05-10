@@ -94,7 +94,7 @@
     window.history.pushState(null, null, '#' + lastSearchQuery);
 
     makeCORSRequest(
-      'http://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(lastSearchQuery),
+      'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(lastSearchQuery),
       function(response) {
         onResults(lastSearchQuery, response.data);
       }
