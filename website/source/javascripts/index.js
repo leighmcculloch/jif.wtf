@@ -145,7 +145,7 @@
     }
     var mediaId = matches[2]
     var imageId = matches[3]
-    return "http://jif.wtf/0" + mediaId + "." + imageId + ".gif";
+    return "https://jif.wtf/0" + mediaId + "." + imageId + ".gif";
   }
 
   function resultUrlSelect(e) {
