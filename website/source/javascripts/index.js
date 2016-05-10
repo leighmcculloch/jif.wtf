@@ -5,7 +5,7 @@
   var resultDisplay;
   var resultMessage;
   var resultUrl;
-  var resultUrlLink;
+  var resultUrlDownload;
   var poweredBy;
   var lastSearchQuery;
   var lastSearchTimeoutId;
@@ -20,7 +20,7 @@
     resultDisplay = document.getElementById('result-display');
     resultMessage = document.getElementById('result-message');
     resultUrl = document.getElementById('result-url');
-    resultUrlLink = document.getElementById('result-url-link');
+    resultUrlDownload = document.getElementById('result-url-download');
     navigation = document.getElementById('navigation-arrows');
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
@@ -148,7 +148,7 @@
         resultMessage.innerHTML = '';
       }
       resultUrl.innerHTML = '';
-      resultUrlLink.innerHTML = '';
+      resultUrlDownload.innerHTML = '';
       navigation.style.display = 'none';
       return;
     }
@@ -172,7 +172,7 @@
 
     var url = transposeGiphyUrl(result.url);
     resultUrl.innerHTML = url;
-    resultUrlLink.innerHTML = '<a href="' + url + '">link</a>';
+    resultUrlDownload.innerHTML = '<a href="' + url + '" download>download</a>';
   }
 
   function transposeGiphyUrl(giphyUrl) {
