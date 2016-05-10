@@ -5,6 +5,7 @@
   var resultDisplay;
   var resultMessage;
   var resultUrl;
+  var resultUrlLink;
   var lastSearchQuery;
   var lastSearchTimeoutId;
 
@@ -18,6 +19,7 @@
     resultDisplay = document.getElementById('result-display');
     resultMessage = document.getElementById('result-message');
     resultUrl = document.getElementById('result-url');
+    resultUrlLink = document.getElementById('result-url-link');
     navigation = document.getElementById('navigation-arrows');
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
@@ -120,6 +122,7 @@
         resultMessage.innerHTML = '';
       }
       resultUrl.innerHTML = '';
+      resultUrlLink.innerHTML = '';
       navigation.style.display = 'none';
       return;
     }
@@ -134,7 +137,10 @@
     resultDisplay.height = result.height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
-    resultUrl.innerHTML = transposeGiphyUrl(result.url);
+
+    var url = transposeGiphyUrl(result.url);
+    resultUrl.innerHTML = url;
+    resultUrlLink.innerHTML = '<a href="' + url + '">link</a>';
   }
 
   function transposeGiphyUrl(giphyUrl) {
