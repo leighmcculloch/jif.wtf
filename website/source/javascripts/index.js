@@ -28,8 +28,8 @@
     navigationRight.addEventListener('click', function() { navigate(1); });
 
     searchForm.addEventListener('submit', formSubmit);
-    searchField.addEventListener('keyup', searchWithDelay);
-    searchField.addEventListener('change', search);
+    searchField.addEventListener('keyup', function() { searchWithDelay(); });
+    searchField.addEventListener('change', function() { search(); });
 
     document.addEventListener('keydown', searchKeyDown);
 
@@ -37,10 +37,31 @@
 
     searchField.focus();
 
-    searchField.value = window.location.hash.replace(/^#/, '');
-    if (searchField.value.length > 0) {
-      searchWithDelay();
+    processPushState(window.location.hash);
+  }
+
+  function processPushState(pushState) {
+    var goto = decodeURIComponent(pushState.replace(/^#/, ''));
+    var gotoParts = goto.split('⇢');
+    if (gotoParts.length >= 1) {
+      searchField.value = gotoParts[0];
+      var optionalIndex = undefined;
+      if (gotoParts.length >= 2) {
+        optionalIndex = gotoParts[1] - 1;
+      }
+      searchWithDelay(optionalIndex);
     }
+  }
+
+  function updatePushState(query, optionalIndex) {
+    var state = '';
+    if (lastSearchQuery !== undefined && lastSearchQuery.length > 0) {
+      state += '#' + lastSearchQuery;
+      if (optionalIndex !== undefined && optionalIndex > 0) {
+        state += '⇢' + (optionalIndex + 1);
+      }
+    }
+    window.history.pushState(null, null, state);
   }
 
   function formSubmit(e) {
@@ -82,34 +103,34 @@
     displayResult(resultIndex);
   }
 
-  function searchWithDelay() {
+  function searchWithDelay(optionalIndex) {
     clearTimeout(lastSearchTimeoutId);
-    lastSearchTimeoutId = setTimeout(search, 500);
+    lastSearchTimeoutId = setTimeout(function() { search(optionalIndex) }, 500);
   }
 
-  function search() {
+  function search(optionalIndex) {
     clearTimeout(lastSearchTimeoutId);
     if (lastSearchQuery == searchField.value) {
       return;
     }
     lastSearchQuery = searchField.value;
-    window.history.pushState(null, null, '#' + lastSearchQuery);
+    updatePushState(lastSearchQuery, optionalIndex)
 
     makeCORSRequest(
       'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(lastSearchQuery),
       function(response) {
-        onResults(lastSearchQuery, response.data);
+        onResults(lastSearchQuery, response.data, optionalIndex);
       }
     );
   }
 
-  function onResults(query, newResults) {
+  function onResults(query, newResults, optionalIndex) {
     if (query != lastSearchQuery) {
       return;
     }
     results = newResults;
     window.results = results;
-    resultIndex = 0;
+    resultIndex = optionalIndex || 0;
     displayResult(resultIndex);
   }
 
@@ -128,6 +149,12 @@
     }
 
     navigation.style.display = 'block';
+
+    if (index < 0 || index >= results.length) {
+      index = 0;
+    }
+
+    updatePushState(lastSearchQuery, index);
 
     result = results[index].images.original;
 
