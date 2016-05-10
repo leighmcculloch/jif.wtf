@@ -6,6 +6,7 @@
   var resultMessage;
   var resultUrl;
   var resultUrlLink;
+  var poweredBy;
   var lastSearchQuery;
   var lastSearchTimeoutId;
 
@@ -23,6 +24,7 @@
     navigation = document.getElementById('navigation-arrows');
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
+    poweredBy = document.getElementById('powered-by');
 
     navigationLeft.addEventListener('click', function() { navigate(-1); });
     navigationRight.addEventListener('click', function() { navigate(1); });
@@ -132,6 +134,9 @@
     window.results = results;
     resultIndex = optionalIndex || 0;
     displayResult(resultIndex);
+    if (query.length > 0) {
+      poweredBy.style.display = 'block';
+    }
   }
 
   function displayResult(index) {
