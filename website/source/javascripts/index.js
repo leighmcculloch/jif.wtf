@@ -165,8 +165,11 @@
 
     resultDisplay.type = 'video/mp4';
     resultDisplay.src = result.mp4;
-    resultDisplay.width = result.width;
-    resultDisplay.height = result.height;
+
+    var height = Math.min(result.height, 200);
+    var width = result.width * height/result.height;
+    resultDisplay.width = width;
+    resultDisplay.height = height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
 
@@ -176,7 +179,7 @@
   }
 
   function transposeGiphyUrl(giphyUrl) {
-    var re = /http(s?):\/\/media(\d+).giphy.com\/media\/([0-9a-zA-Z]+)\/giphy.gif/g;
+    var re = /http(s?):\/\/media(\d+).giphy.com\/media\/([0-9a-zA-Z]+)\/[a-z0-9_]+.gif/g;
     var matches = re.exec(giphyUrl);
     if (matches.length != 4) {
       return giphyUrl;
