@@ -173,19 +173,22 @@
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
 
-    var url = transposeGiphyUrl(result.url);
+    var ids = getGiphyIds(result.url);
+    var url = getIntermediateGifUrl(ids.mediaId, ids.imageId);
     resultUrl.innerHTML = url;
-    resultUrlDownload.innerHTML = '<a href="' + url + '" download>download</a>';
+    resultUrlDownload.innerHTML = '<a href="' + url + '" download="' + ids.imageId + '.gif">download</a>';
   }
 
-  function transposeGiphyUrl(giphyUrl) {
+  function getGiphyIds(giphyUrl) {
     var re = /http(s?):\/\/media(\d+).giphy.com\/media\/([0-9a-zA-Z]+)\/[a-z0-9_]+.gif/g;
     var matches = re.exec(giphyUrl);
     if (matches.length != 4) {
       return giphyUrl;
     }
-    var mediaId = matches[2]
-    var imageId = matches[3]
+    return { mediaId: matches[2], imageId: matches[3] }
+  }
+
+  function getIntermediateGifUrl(mediaId, imageId) {
     return "https://jif.wtf/0" + mediaId + "." + imageId + ".gif";
   }
 
