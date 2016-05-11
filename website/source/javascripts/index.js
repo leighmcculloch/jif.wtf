@@ -51,7 +51,7 @@
       if (gotoParts.length >= 2) {
         optionalIndex = gotoParts[1] - 1;
       }
-      searchWithDelay(optionalIndex);
+      search(optionalIndex);
     }
   }
 
