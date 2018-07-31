@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "website/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/0:id1.:id2.gif",
+        "destination": "https://media:id1.giphy.com/media/:id2/200.gif",
+        "type": 301
+      }
+    ]
+  }
+}
