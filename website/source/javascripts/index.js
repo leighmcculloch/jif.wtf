@@ -10,6 +10,7 @@
   var lastSearchQuery;
   var lastSearchTimeoutId;
 
+  var source = "tenor";
   var results;
   var resultIndex;
 
@@ -117,9 +118,18 @@
     }
     lastSearchQuery = searchField.value;
     updatePushState(lastSearchQuery, optionalIndex)
+    
+    var baseUrl;
+    if (source == "tenor") {
+      baseUrl = 'https://us-central1-jif-wtf-bf47b.cloudfunctions.net/search?q=';
+    } else if (source == "giphy") {
+      baseUrl = 'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=';
+    } else {
+      throw "Source unknown: " + source;
+    }
 
     makeCORSRequest(
-      'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=' + encodeURIComponent(lastSearchQuery),
+      baseUrl + encodeURIComponent(lastSearchQuery),
       function(response) {
         onResults(lastSearchQuery, response.data, optionalIndex);
       }
@@ -172,9 +182,16 @@
     resultDisplay.height = height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
+    
+    if (source == "tenor") {
+      ids = getTenorIds(result.url);
+    } else if (source == "giphy") {
+      ids = getGiphyIds(result.url);
+    } else {
+      throw "Source unknown: " + source;
+    }
 
-    var ids = getGiphyIds(result.url);
-    var url = getIntermediateGifUrl(ids.mediaId, ids.imageId);
+    var url = getIntermediateGifUrl(ids.sourceId, ids.mediaId, ids.imageId);
     resultUrl.innerHTML = url;
     resultUrlDownload.innerHTML = '<a href="' + url + '" download="' + ids.imageId + '.gif">download</a>';
   }
@@ -185,11 +202,20 @@
     if (matches.length != 4) {
       return giphyUrl;
     }
-    return { mediaId: matches[2], imageId: matches[3] }
+    return { sourceId: "0", mediaId: matches[2], imageId: matches[3] }
   }
 
-  function getIntermediateGifUrl(mediaId, imageId) {
-    return "https://jif.wtf/0" + mediaId + "." + imageId + ".gif";
+  function getTenorIds(tenorUrl) {
+    var re = /http(s?):\/\/media.tenor.com\/images\/([0-9a-z]+)\/tenor.gif/g;
+    var matches = re.exec(tenorUrl);
+    if (matches.length != 3) {
+      return tenorUrl;
+    }
+    return { sourceId: "1", mediaId: "0", imageId: matches[2] }
+  }
+
+  function getIntermediateGifUrl(sourceId, mediaId, imageId) {
+    return "https://jif.wtf/" + sourceId + mediaId + "." + imageId + ".gif";
   }
 
   function resultUrlSelect(e) {
