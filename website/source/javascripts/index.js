@@ -10,7 +10,7 @@
   var lastSearchQuery;
   var lastSearchTimeoutId;
 
-  var source = "tenor";
+  var source = new URLSearchParams(window.location.search).get('source') || "giphy";
   var results;
   var resultIndex;
 
