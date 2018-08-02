@@ -8,11 +8,15 @@ run:
 
 build:
 	cd website && bundle exec middleman build
+	cd service && go build
 
-push: push-functions push-hosting
+push: push-service push-functions push-hosting
 
 push-functions:
 	firebase deploy --only functions
+
+push-service:
+	cd service && gcloud app deploy --project jif-wtf-bf47b
 
 push-hosting:
 	firebase deploy --only hosting

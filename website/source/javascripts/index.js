@@ -6,11 +6,12 @@
   var resultMessage;
   var resultUrl;
   var resultUrlDownload;
-  var poweredBy;
+  var poweredByGiphy;
+  var poweredByTenor;
   var lastSearchQuery;
   var lastSearchTimeoutId;
 
-  var source = new URLSearchParams(window.location.search).get('source') || "giphy";
+  var source = new URLSearchParams(window.location.search).get('source') || "tenor";
   var results;
   var resultIndex;
 
@@ -25,7 +26,8 @@
     navigation = document.getElementById('navigation-arrows');
     navigationLeft = document.getElementById('navigation-arrow-left');
     navigationRight = document.getElementById('navigation-arrow-right');
-    poweredBy = document.getElementById('powered-by');
+    poweredByGiphy = document.getElementById('powered-by-giphy');
+    poweredByTenor = document.getElementById('powered-by-tenor');
 
     navigationLeft.addEventListener('click', function() { navigate(-1); });
     navigationRight.addEventListener('click', function() { navigate(1); });
@@ -118,10 +120,14 @@
     }
     lastSearchQuery = searchField.value;
     updatePushState(lastSearchQuery, optionalIndex)
-    
+
     var baseUrl;
     if (source == "tenor") {
+      baseUrl = 'https://api.tenor.com/v1/search?q=';
+    } else if (source == "tenor-function") {
       baseUrl = 'https://us-central1-jif-wtf-bf47b.cloudfunctions.net/search?q=';
+    } else if (source == "tenor-appengine") {
+      baseUrl = 'https://jif-wtf-bf47b.appspot.com/search?q=';
     } else if (source == "giphy") {
       baseUrl = 'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=';
     } else {
@@ -131,7 +137,24 @@
     makeCORSRequest(
       baseUrl + encodeURIComponent(lastSearchQuery),
       function(response) {
-        onResults(lastSearchQuery, response.data, optionalIndex);
+        var data;
+        if (source == "tenor") {
+          data = response.results.map(function(r) {
+            return {
+              images: {
+                original: {
+                  url: r.media[0].gif.url,
+                  mp4: r.media[0].mp4.url,
+                  width: r.media[0].mp4.dims[0],
+                  height: r.media[0].mp4.dims[1]
+                }
+              }
+            };
+          })
+        } else {
+          data = response.data;
+        }
+        onResults(lastSearchQuery, data, optionalIndex);
       }
     );
   }
@@ -145,7 +168,11 @@
     resultIndex = optionalIndex || 0;
     displayResult(resultIndex);
     if (query.length > 0) {
-      poweredBy.style.display = 'block';
+      if (source == "tenor" || source == "tenor-function" || source == "tenor-appengine") {
+        poweredByTenor.style.display = 'block';
+      } else if (source == "giphy") {
+        poweredByGiphy.style.display = 'block';
+      }
     }
   }
 
@@ -182,8 +209,8 @@
     resultDisplay.height = height;
 
     resultMessage.innerHTML = "Result " + (index + 1) + " of " + results.length;
-    
-    if (source == "tenor") {
+
+    if (source == "tenor" || source == "tenor-function" || source == "tenor-appengine") {
       ids = getTenorIds(result.url);
     } else if (source == "giphy") {
       ids = getGiphyIds(result.url);

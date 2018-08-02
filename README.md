@@ -22,7 +22,6 @@ Yes, I know. There are already many wesites that let me search for gifs. They ar
 Built using `middleman` and deploys to AWS S3.
 
 ```bash
-cd website/
 make deploy
 ```
 
@@ -30,4 +29,4 @@ make deploy
 Inspired by [Insert Pic](http://www.getinsertpic.com/).
 
 # Powered by
-![](README-powered-by-giphy.gif)
+Giphy and Tenor

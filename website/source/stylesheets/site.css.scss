@@ -42,11 +42,13 @@ body {
   }
 }
 
-#powered-by {
+#powered-by-giphy,
+#powered-by-tenor {
   display: none;
   position: absolute;
   bottom: 0;
   text-align: center;
   width: 100%;
   margin-bottom: 1em;
+  color: #ccc;
 }
