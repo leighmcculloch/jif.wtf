@@ -9,5 +9,10 @@ run:
 build:
 	cd website && bundle exec middleman build
 
-push:
-	firebase deploy
+push: push-functions push-hosting
+
+push-functions:
+	firebase deploy --only functions
+
+push-hosting:
+	firebase deploy --only hosting
