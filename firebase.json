@@ -8,12 +8,12 @@
     ],
     "redirects": [
       {
-        "source": "/0:id1.:id2.gif",
+        "source": "/0/:id1/:id2/1.gif",
         "destination": "https://media:id1.giphy.com/media/:id2/200.gif",
         "type": 301
       },
       {
-        "source": "/10.:id2.gif",
+        "source": "/1/0/:id2/1.gif",
         "destination": "https://media.tenor.com/images/:id2/tenor.gif",
         "type": 301
       }
