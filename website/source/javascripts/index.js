@@ -242,7 +242,7 @@
   }
 
   function getIntermediateGifUrl(sourceId, mediaId, imageId) {
-    return "https://jif.wtf/" + sourceId + mediaId + "." + imageId + ".gif";
+    return "https://i.jif.wtf/" + sourceId + mediaId + "." + imageId + ".gif";
   }
 
   function resultUrlSelect(e) {
