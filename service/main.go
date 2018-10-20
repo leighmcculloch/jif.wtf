@@ -1,29 +1,34 @@
-package slackoauth
+package main
 
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
-
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/urlfetch"
 )
+
+func main() {
+	http.HandleFunc("/search", search)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	addr := fmt.Sprintf(":%s", port)
+	log.Printf("Listening on %s", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
+}
 
 const tenorBaseURL = "https://api.tenor.com/v1/search"
 
 var tenorKey = os.Getenv("TENOR_KEY")
 
-func init() {
-	http.HandleFunc("/search", search)
-}
-
 func search(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-
 	q := r.URL.Query().Get("q")
 
 	tenorParams := url.Values{}
@@ -34,10 +39,14 @@ func search(w http.ResponseWriter, r *http.Request) {
 	tenorParams.Set("q", q)
 	tenorURL := tenorBaseURL + "?" + tenorParams.Encode()
 
-	reqContext, reqCancel := context.WithTimeout(c, time.Minute)
+	req, err := http.NewRequest("GET", tenorURL, nil)
+	if err != nil {
+		panic(err)
+	}
+	reqContext, reqCancel := context.WithTimeout(r.Context(), time.Minute)
 	defer reqCancel()
-	client := urlfetch.Client(reqContext)
-	resp, err := client.Get(tenorURL)
+	req = req.WithContext(reqContext)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		panic(err)
 	}
