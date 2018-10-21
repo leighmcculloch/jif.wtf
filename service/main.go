@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"os"
 	"time"
+
+	"cloud.google.com/go/logging"
 )
 
 func main() {
@@ -29,6 +31,15 @@ const tenorBaseURL = "https://api.tenor.com/v1/search"
 var tenorKey = os.Getenv("TENOR_KEY")
 
 func search(w http.ResponseWriter, r *http.Request) {
+	c := r.Context()
+	loggerClient, err := logging.NewClient(c, "jif-wtf-bf47b")
+	if err != nil {
+		panic(err)
+	}
+	defer loggerClient.Close()
+	logger := loggerClient.Logger("app")
+	log := logger.StandardLogger(logging.Info)
+
 	q := r.URL.Query().Get("q")
 
 	log.Printf("Query: %q", q)
