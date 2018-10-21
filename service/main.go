@@ -31,6 +31,8 @@ var tenorKey = os.Getenv("TENOR_KEY")
 func search(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
 
+	log.Printf("Query: %q", q)
+
 	tenorParams := url.Values{}
 	tenorParams.Set("key", tenorKey)
 	tenorParams.Set("safesearch", "mild")
@@ -38,6 +40,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 	tenorParams.Set("media_filter", "minimal")
 	tenorParams.Set("q", q)
 	tenorURL := tenorBaseURL + "?" + tenorParams.Encode()
+
+	log.Printf("Calling out to tenor: %s", tenorURL)
 
 	req, err := http.NewRequest("GET", tenorURL, nil)
 	if err != nil {
@@ -56,6 +60,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
+	log.Printf("Got response")
 
 	var tenorRes struct {
 		Results []struct {
@@ -108,6 +114,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resBytes, err := json.MarshalIndent(res, "", "  ")
+
+	log.Printf("Sending %d results (%d bytes) back to browser", len(res.Data), len(resBytes))
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
