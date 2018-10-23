@@ -54,12 +54,12 @@ func search(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	defer loggerClient.Close()
-	logger := loggerClient.Logger("appengine.googleapis.com%2Frequest_log")
+	logger := loggerClient.Logger("app_logs")
 
 	q := r.URL.Query().Get("q")
 
 	log.Printf("Query: %q", q)
-	logger.Log(logging.Entry{Payload: fmt.Sprintf("Q2uery: %q", q), Trace: traceID(r), Resource: projectResource})
+	logger.Log(logging.Entry{Payload: fmt.Sprintf("Q2uery: %q", q), Severity: logging.Info, Trace: traceID(r), Resource: projectResource})
 
 	tenorParams := url.Values{}
 	tenorParams.Set("key", tenorKey)
