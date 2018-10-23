@@ -9,9 +9,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/logging"
+	"google.golang.org/genproto/googleapis/api/monitoredres"
 )
 
 func main() {
@@ -26,23 +28,38 @@ func main() {
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
+var projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
+var projectResource = &monitoredres.MonitoredResource{
+	Labels: map[string]string{
+		"module_id":  os.Getenv("GAE_SERVICE"),
+		"project_id": projectID,
+		"version_id": os.Getenv("GAE_VERSION"),
+	},
+	Type: "gae_app",
+}
+
 const tenorBaseURL = "https://api.tenor.com/v1/search"
 
 var tenorKey = os.Getenv("TENOR_KEY")
 
+func traceID(r *http.Request) string {
+	id := strings.Split(r.Header.Get("X-Cloud-Trace-Context"), "/")[0]
+	return fmt.Sprintf("projects/%s/traces/%s", projectID, id)
+}
+
 func search(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	loggerClient, err := logging.NewClient(c, "jif-wtf-bf47b")
+	loggerClient, err := logging.NewClient(c, "projects/"+projectID)
 	if err != nil {
 		panic(err)
 	}
 	defer loggerClient.Close()
-	logger := loggerClient.Logger("app")
-	log := logger.StandardLogger(logging.Info)
+	logger := loggerClient.Logger("appengine.googleapis.com%2Frequest_log")
 
 	q := r.URL.Query().Get("q")
 
 	log.Printf("Query: %q", q)
+	logger.Log(logging.Entry{Payload: fmt.Sprintf("Q2uery: %q", q), Trace: traceID(r), Resource: projectResource})
 
 	tenorParams := url.Values{}
 	tenorParams.Set("key", tenorKey)
