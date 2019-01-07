@@ -124,8 +124,6 @@
     var baseUrl;
     if (source == "tenor") {
       baseUrl = 'https://api.tenor.com/v1/search?q=';
-    } else if (source == "tenor-function") {
-      baseUrl = 'https://us-central1-jif-wtf-bf47b.cloudfunctions.net/search?q=';
     } else if (source == "tenor-appengine") {
       baseUrl = 'https://jif-wtf-bf47b.appspot.com/search?q=';
     } else if (source == "giphy") {
