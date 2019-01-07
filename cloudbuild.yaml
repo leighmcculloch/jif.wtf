@@ -1,0 +1,7 @@
+steps:
+- name: 'ruby:2.6.0'
+  args: ['make', 'build']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy', '--project=jif-wtf-bf47b', '--version=$SHORT_SHA', 'service/app.yaml']
+- name: 'node:10.15.0'
+  args: ['make', 'push-website']
