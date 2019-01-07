@@ -1,22 +1,25 @@
 deploy: clean build push
 
 clean:
-	cd website && rm -fR build
+	rm -fR website/build
 
-run:
-	cd website && bundle exec middleman server
+build: build-website
 
-build:
+build-website:
+	[ -t 0 ] || (cd website && bundle install)
 	cd website && bundle exec middleman build
-	cd service && go build
 
-push: push-service push-functions push-hosting
-
-push-functions:
-	firebase deploy --only functions
+push: push-service push-website
 
 push-service:
-	cd service && gcloud app deploy --project jif-wtf-bf47b
+	gcloud app deploy --project jif-wtf-bf47b service/app.yaml
 
-push-hosting:
-	firebase deploy --only hosting
+push-website: .bin/node_modules/.bin/firebase
+	[ ! -t 0 ] || .bin/node_modules/.bin/firebase login --no-localhost
+	.bin/node_modules/.bin/firebase deploy
+
+.bin:
+	mkdir .bin
+
+.bin/node_modules/.bin/firebase: .bin
+	yarn --no-lockfile --modules-folder=.bin/node_modules add firebase-tools

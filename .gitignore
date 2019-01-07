@@ -1,4 +1,3 @@
-service/bin*
-service/pkg*
-service/src*
-!service/src/jifwtfservice/*
+.bin/
+.firebase/
+package.json
